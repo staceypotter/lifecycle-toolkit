@@ -19,6 +19,11 @@ package keptnevaluation
 import (
 	"context"
 	"fmt"
+	"math"
+	"net/http"
+	"strconv"
+	"time"
+
 	promapi "github.com/prometheus/client_golang/api"
 	prometheus "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
@@ -30,14 +35,10 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/record"
-	"math"
-	"net/http"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
-	"strconv"
-	"time"
 
 	"github.com/go-logr/logr"
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
@@ -323,20 +324,16 @@ func (r *KeptnEvaluationReconciler) checkValue(objective klcv1alpha1.Objective, 
 	if err != nil || math.IsNaN(compareValue) {
 		return false, err
 	}
+
 	// choose comparator
 	switch sign {
-
 	case ">":
 		return resultValue > compareValue, nil
-
 	case "<":
 		return resultValue < compareValue, nil
-
 	default:
 		return false, fmt.Errorf("invalid operator")
-
 	}
-
 }
 
 func (r *KeptnEvaluationReconciler) recordEvent(eventType string, evaluation *klcv1alpha1.KeptnEvaluation, shortReason string, longReason string) {
