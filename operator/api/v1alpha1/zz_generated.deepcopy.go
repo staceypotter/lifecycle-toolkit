@@ -362,6 +362,20 @@ func (in *KeptnAppVersionStatus) DeepCopyInto(out *KeptnAppVersionStatus) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.PreEvaluationTaskStatus != nil {
+		in, out := &in.PreEvaluationTaskStatus, &out.PreEvaluationTaskStatus
+		*out = make([]KeptnEvaluationStatus, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
+	if in.PostEvaluationTaskStatus != nil {
+		in, out := &in.PostEvaluationTaskStatus, &out.PostEvaluationTaskStatus
+		*out = make([]KeptnEvaluationStatus, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
 	in.StartTime.DeepCopyInto(&out.StartTime)
 	in.EndTime.DeepCopyInto(&out.EndTime)
 }

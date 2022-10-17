@@ -116,6 +116,44 @@ spec:
                       type: string
                   type: object
                 type: array
+              postEvaluationStatus:
+                default: Pending
+                type: string
+              postEvaluationTaskStatus:
+                items:
+                  description: KeptnEvaluationStatus defines the observed state of
+                    KeptnEvaluation
+                  properties:
+                    endTime:
+                      format: date-time
+                      type: string
+                    evaluationStatus:
+                      additionalProperties:
+                        properties:
+                          status:
+                            type: string
+                          value:
+                            type: string
+                        required:
+                        - status
+                        - value
+                        type: object
+                      type: object
+                    overallStatus:
+                      default: Pending
+                      type: string
+                    retryCount:
+                      default: 0
+                      type: integer
+                    startTime:
+                      format: date-time
+                      type: string
+                  required:
+                  - evaluationStatus
+                  - overallStatus
+                  - retryCount
+                  type: object
+                type: array
               preDeploymentStatus:
                 default: Pending
                 type: string
@@ -135,6 +173,44 @@ spec:
                       type: string
                     taskName:
                       type: string
+                  type: object
+                type: array
+              preEvaluationStatus:
+                default: Pending
+                type: string
+              preEvaluationTaskStatus:
+                items:
+                  description: KeptnEvaluationStatus defines the observed state of
+                    KeptnEvaluation
+                  properties:
+                    endTime:
+                      format: date-time
+                      type: string
+                    evaluationStatus:
+                      additionalProperties:
+                        properties:
+                          status:
+                            type: string
+                          value:
+                            type: string
+                        required:
+                        - status
+                        - value
+                        type: object
+                      type: object
+                    overallStatus:
+                      default: Pending
+                      type: string
+                    retryCount:
+                      default: 0
+                      type: integer
+                    startTime:
+                      format: date-time
+                      type: string
+                  required:
+                  - evaluationStatus
+                  - overallStatus
+                  - retryCount
                   type: object
                 type: array
               startTime:
