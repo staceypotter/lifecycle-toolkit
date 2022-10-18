@@ -3,6 +3,7 @@ package keptnappversion
 import (
 	"context"
 	"fmt"
+	"time"
 
 	klcv1alpha1 "github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1"
 	"github.com/keptn-sandbox/lifecycle-controller/operator/api/v1alpha1/common"
@@ -151,6 +152,9 @@ func (r *KeptnAppVersionReconciler) createKeptnEvaluation(ctx context.Context, n
 			AppName:              appVersion.Spec.AppName,
 			EvaluationDefinition: evaluationDefinition,
 			Type:                 checkType,
+			RetryInterval: metav1.Duration{
+				Duration: 5 * time.Second,
+			},
 		},
 	}
 	err := controllerutil.SetControllerReference(appVersion, newEvaluation, r.Scheme)
