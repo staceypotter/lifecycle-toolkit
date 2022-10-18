@@ -56,6 +56,15 @@ type TaskStatus struct {
 	EndTime   metav1.Time       `json:"endTime,omitempty"`
 }
 
+type EvaluationStatus struct {
+	EvaluationDefinitionName string `json:"TaskDefinitionName,omitempty"`
+	// +kubebuilder:default:=Pending
+	Status         common.KeptnState `json:"status,omitempty"`
+	EvaluationName string            `json:"taskName,omitempty"`
+	StartTime      metav1.Time       `json:"startTime,omitempty"`
+	EndTime        metav1.Time       `json:"endTime,omitempty"`
+}
+
 //+kubebuilder:object:root=true
 //+kubebuilder:resource:path=keptnworkloadinstances,shortName=kwi
 //+kubebuilder:subresource:status

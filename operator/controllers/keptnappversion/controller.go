@@ -128,7 +128,7 @@ func (r *KeptnAppVersionReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	}
 
 	phase = common.PhaseAppPostEvaluation
-	if !appVersion.IsPostEvaluationSucceeded() {
+	if !appVersion.IsPostEvaluationCompleted() {
 		reconcilePostEval := func() (common.KeptnState, error) {
 			return r.reconcilePrePostEvaluation(ctx, appVersion, common.PostEvaluationCheckType)
 		}

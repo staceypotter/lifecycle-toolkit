@@ -47,10 +47,10 @@ type KeptnAppVersionStatus struct {
 	WorkloadOverallStatus common.KeptnState `json:"workloadOverallStatus,omitempty"`
 	WorkloadStatus        []WorkloadStatus  `json:"workloadStatus,omitempty"`
 
-	PreDeploymentTaskStatus  []TaskStatus            `json:"preDeploymentTaskStatus,omitempty"`
-	PostDeploymentTaskStatus []TaskStatus            `json:"postDeploymentTaskStatus,omitempty"`
-	PreEvaluationTaskStatus  []KeptnEvaluationStatus `json:"preEvaluationTaskStatus,omitempty"`
-	PostEvaluationTaskStatus []KeptnEvaluationStatus `json:"postEvaluationTaskStatus,omitempty"`
+	PreDeploymentTaskStatus  []TaskStatus       `json:"preDeploymentTaskStatus,omitempty"`
+	PostDeploymentTaskStatus []TaskStatus       `json:"postDeploymentTaskStatus,omitempty"`
+	PreEvaluationTaskStatus  []EvaluationStatus `json:"preEvaluationTaskStatus,omitempty"`
+	PostEvaluationTaskStatus []EvaluationStatus `json:"postEvaluationTaskStatus,omitempty"`
 
 	StartTime metav1.Time `json:"startTime,omitempty"`
 	EndTime   metav1.Time `json:"endTime,omitempty"`

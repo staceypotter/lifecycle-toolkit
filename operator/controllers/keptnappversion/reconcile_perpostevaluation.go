@@ -47,21 +47,21 @@ func (r *KeptnAppVersionReconciler) reconcileEvaluations(ctx context.Context, ch
 	}
 
 	var evaluations []string
-	var statuses []klcv1alpha1.KeptnEvaluationStatus
+	var statuses []klcv1alpha1.EvaluationStatus
 
 	switch checkType {
 	case common.PreEvaluationCheckType:
-		evaluations = appVersion.Spec.PreDeploymentEvaluation
+		evaluations = appVersion.Spec.PreDeploymentEvaluations
 		statuses = appVersion.Status.PreEvaluationTaskStatus
 	case common.PostEvaluationCheckType:
-		evaluations = appVersion.Spec.PostDeploymentEvaluation
+		evaluations = appVersion.Spec.PostDeploymentEvaluations
 		statuses = appVersion.Status.PostEvaluationTaskStatus
 	}
 
 	var summary common.StatusSummary
 	summary.Total = len(evaluations)
 	// Check current state of the PrePostEvaluationTasks
-	var newStatus []klcv1alpha1.KeptnEvaluationStatus
+	var newStatus []klcv1alpha1.EvaluationStatus
 	for _, evaluation := range evaluations {
 		var oldstatus common.KeptnState
 		for _, ts := range statuses {
