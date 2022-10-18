@@ -40,7 +40,7 @@ func (r *KeptnAppVersionReconciler) reconcilePrePostEvaluation(ctx context.Conte
 	return overallState, nil
 }
 
-func (r *KeptnAppVersionReconciler) reconcileEvaluations(ctx context.Context, checkType common.CheckType, appVersion *klcv1alpha1.KeptnAppVersion) ([]klcv1alpha1.KeptnEvaluationStatus, common.StatusSummary, error) {
+func (r *KeptnAppVersionReconciler) reconcileEvaluations(ctx context.Context, checkType common.CheckType, appVersion *klcv1alpha1.KeptnAppVersion) ([]klcv1alpha1.EvaluationStatus, common.StatusSummary, error) {
 	phase := common.KeptnPhaseType{
 		ShortName: "ReconcileEvaluations",
 		LongName:  "Reconcile Evaluations",
@@ -62,56 +62,56 @@ func (r *KeptnAppVersionReconciler) reconcileEvaluations(ctx context.Context, ch
 	summary.Total = len(evaluations)
 	// Check current state of the PrePostEvaluationTasks
 	var newStatus []klcv1alpha1.EvaluationStatus
-	for _, evaluation := range evaluations {
+	for _, evaluationName := range evaluations {
 		var oldstatus common.KeptnState
 		for _, ts := range statuses {
-			if ts.TaskDefinitionName == taskDefinitionName {
+			if ts.EvaluationDefinitionName == evaluationName {
 				oldstatus = ts.Status
 			}
 		}
 
-		taskStatus := GetTaskStatus(taskDefinitionName, statuses)
-		task := &klcv1alpha1.KeptnTask{}
-		taskExists := false
+		evaluationStatus := GetEvaluationStatus(evaluationName, statuses)
+		evaluation := &klcv1alpha1.KeptnEvaluation{}
+		evaluationExists := false
 
-		if oldstatus != taskStatus.Status {
-			r.recordEvent(phase, "Normal", appVersion, "TaskStatusChanged", fmt.Sprintf("task status changed from %s to %s", oldstatus, taskStatus.Status))
+		if oldstatus != evaluationStatus.Status {
+			r.recordEvent(phase, "Normal", appVersion, "EvaluationStatusChanged", fmt.Sprintf("evaluation status changed from %s to %s", oldstatus, evaluationStatus.Status))
 		}
 
-		// Check if task has already succeeded or failed
-		if taskStatus.Status == common.StateSucceeded || taskStatus.Status == common.StateFailed {
-			newStatus = append(newStatus, taskStatus)
+		// Check if evaluation has already succeeded or failed
+		if evaluationStatus.Status.IsCompleted() {
+			newStatus = append(newStatus, evaluationStatus)
 			continue
 		}
 
-		// Check if Task is already created
-		if taskStatus.TaskName != "" {
-			err := r.Client.Get(ctx, types.NamespacedName{Name: taskStatus.TaskName, Namespace: appVersion.Namespace}, task)
+		// Check if Evaluation is already created
+		if evaluationStatus.EvaluationName != "" {
+			err := r.Client.Get(ctx, types.NamespacedName{Name: evaluationStatus.EvaluationName, Namespace: appVersion.Namespace}, evaluation)
 			if err != nil && errors.IsNotFound(err) {
-				taskStatus.TaskName = ""
+				evaluationStatus.EvaluationName = ""
 			} else if err != nil {
 				return nil, summary, err
 			}
-			taskExists = true
+			evaluationExists = true
 		}
 
-		// Create new Task if it does not exist
-		if !taskExists {
-			taskName, err := r.createKeptnTask(ctx, appVersion.Namespace, appVersion, taskDefinitionName, checkType)
+		// Create new Evaluation if it does not exist
+		if !evaluationExists {
+			evaluationName, err := r.createKeptnEvaluation(ctx, appVersion.Namespace, appVersion, evaluationName, checkType)
 			if err != nil {
 				return nil, summary, err
 			}
-			taskStatus.TaskName = taskName
-			taskStatus.SetStartTime()
+			evaluationStatus.EvaluationName = evaluationName
+			evaluationStatus.SetStartTime()
 		} else {
-			// Update state of Task if it is already created
-			taskStatus.Status = task.Status.Status
-			if taskStatus.Status.IsCompleted() {
-				taskStatus.SetEndTime()
+			// Update state of Evaluation if it is already created
+			evaluationStatus.Status = evaluation.Status.OverallStatus
+			if evaluationStatus.Status.IsCompleted() {
+				evaluationStatus.SetEndTime()
 			}
 		}
 		// Update state of the Check
-		newStatus = append(newStatus, taskStatus)
+		newStatus = append(newStatus, evaluationStatus)
 	}
 
 	for _, ns := range newStatus {
@@ -123,9 +123,9 @@ func (r *KeptnAppVersionReconciler) reconcileEvaluations(ctx context.Context, ch
 	return newStatus, summary, nil
 }
 
-func (r *KeptnAppVersionReconciler) createKeptnEvaluation(ctx context.Context, namespace string, appVersion *klcv1alpha1.KeptnAppVersion, taskDefinition string, checkType common.CheckType) (string, error) {
+func (r *KeptnAppVersionReconciler) createKeptnEvaluation(ctx context.Context, namespace string, appVersion *klcv1alpha1.KeptnAppVersion, evaluationDefinition string, checkType common.CheckType) (string, error) {
 
-	ctx, span := r.Tracer.Start(ctx, "create_app_task", trace.WithSpanKind(trace.SpanKindProducer))
+	ctx, span := r.Tracer.Start(ctx, "create_app_evaluation", trace.WithSpanKind(trace.SpanKindProducer))
 	defer span.End()
 
 	semconv.AddAttributeFromAppVersion(span, *appVersion)
@@ -136,49 +136,47 @@ func (r *KeptnAppVersionReconciler) createKeptnEvaluation(ctx context.Context, n
 	otel.GetTextMapPropagator().Inject(ctx, traceContextCarrier)
 
 	phase := common.KeptnPhaseType{
-		ShortName: "KeptnTaskCreate",
-		LongName:  "Keptn Task Create",
+		ShortName: "KeptnEvaluationCreate",
+		LongName:  "Keptn Evaluation Create",
 	}
 
-	newTask := &klcv1alpha1.KeptnTask{
+	newEvaluation := &klcv1alpha1.KeptnEvaluation{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        common.GenerateTaskName(checkType, taskDefinition),
+			Name:        common.GenerateTaskName(checkType, evaluationDefinition),
 			Namespace:   namespace,
 			Annotations: traceContextCarrier,
 		},
-		Spec: klcv1alpha1.KeptnTaskSpec{
-			Version:          appVersion.Spec.Version,
-			AppName:          appVersion.Spec.AppName,
-			TaskDefinition:   taskDefinition,
-			Parameters:       klcv1alpha1.TaskParameters{},
-			SecureParameters: klcv1alpha1.SecureParameters{},
-			Type:             checkType,
+		Spec: klcv1alpha1.KeptnEvaluationSpec{
+			AppVersion:           appVersion.Spec.Version,
+			AppName:              appVersion.Spec.AppName,
+			EvaluationDefinition: evaluationDefinition,
+			Type:                 checkType,
 		},
 	}
-	err := controllerutil.SetControllerReference(appVersion, newTask, r.Scheme)
+	err := controllerutil.SetControllerReference(appVersion, newEvaluation, r.Scheme)
 	if err != nil {
 		r.Log.Error(err, "could not set controller reference:")
 	}
-	err = r.Client.Create(ctx, newTask)
+	err = r.Client.Create(ctx, newEvaluation)
 	if err != nil {
-		r.Log.Error(err, "could not create KeptnTask")
-		r.recordEvent(phase, "Warning", appVersion, "CreateFailed", "could not create KeptnTask")
+		r.Log.Error(err, "could not create KeptnEvaluation")
+		r.recordEvent(phase, "Warning", appVersion, "CreateFailed", "could not create KeptnEvaluation")
 		return "", err
 	}
 	r.recordEvent(phase, "Normal", appVersion, "Created", "created")
 
-	return newTask.Name, nil
+	return newEvaluation.Name, nil
 }
 
-func GetEvaluationStatus(taskName string, instanceStatus []klcv1alpha1.TaskStatus) klcv1alpha1.TaskStatus {
+func GetEvaluationStatus(evaluationName string, instanceStatus []klcv1alpha1.EvaluationStatus) klcv1alpha1.EvaluationStatus {
 	for _, status := range instanceStatus {
-		if status.TaskDefinitionName == taskName {
+		if status.EvaluationDefinitionName == evaluationName {
 			return status
 		}
 	}
-	return klcv1alpha1.TaskStatus{
-		TaskDefinitionName: taskName,
-		Status:             common.StatePending,
-		TaskName:           "",
+	return klcv1alpha1.EvaluationStatus{
+		EvaluationDefinitionName: evaluationName,
+		Status:                   common.StatePending,
+		EvaluationName:           "",
 	}
 }

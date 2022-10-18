@@ -101,8 +101,6 @@ spec:
               postDeploymentTaskStatus:
                 items:
                   properties:
-                    TaskDefinitionName:
-                      type: string
                     endTime:
                       format: date-time
                       type: string
@@ -111,6 +109,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      type: string
+                    taskDefinitionName:
                       type: string
                     taskName:
                       type: string
@@ -122,18 +122,18 @@ spec:
               postEvaluationTaskStatus:
                 items:
                   properties:
-                    TaskDefinitionName:
-                      type: string
                     endTime:
                       format: date-time
+                      type: string
+                    evaluationDefinitionName:
+                      type: string
+                    evaluationName:
                       type: string
                     startTime:
                       format: date-time
                       type: string
                     status:
                       default: Pending
-                      type: string
-                    taskName:
                       type: string
                   type: object
                 type: array
@@ -143,8 +143,6 @@ spec:
               preDeploymentTaskStatus:
                 items:
                   properties:
-                    TaskDefinitionName:
-                      type: string
                     endTime:
                       format: date-time
                       type: string
@@ -153,6 +151,8 @@ spec:
                       type: string
                     status:
                       default: Pending
+                      type: string
+                    taskDefinitionName:
                       type: string
                     taskName:
                       type: string
@@ -164,18 +164,18 @@ spec:
               preEvaluationTaskStatus:
                 items:
                   properties:
-                    TaskDefinitionName:
-                      type: string
                     endTime:
                       format: date-time
+                      type: string
+                    evaluationDefinitionName:
+                      type: string
+                    evaluationName:
                       type: string
                     startTime:
                       format: date-time
                       type: string
                     status:
                       default: Pending
-                      type: string
-                    taskName:
                       type: string
                   type: object
                 type: array
