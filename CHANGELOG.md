@@ -1,5 +1,40 @@
 # Changelog
 
+## [0.8.1](https://github.com/keptn/lifecycle-toolkit/compare/klt-v0.8.0...klt-v0.8.1) (2023-06-27)
+
+
+### Features
+
+* add support for timeframe in `KeptnMetric` ([#1471](https://github.com/keptn/lifecycle-toolkit/issues/1471)) ([4d9ceb7](https://github.com/keptn/lifecycle-toolkit/commit/4d9ceb7a630ad8007f2583040f24ec514870006d))
+* cert-manager monorepo setup ([#1528](https://github.com/keptn/lifecycle-toolkit/issues/1528)) ([0156f15](https://github.com/keptn/lifecycle-toolkit/commit/0156f15779f0ec756c801b51a84c3e9cdd0edeb7))
+
+
+### Docs
+
+* `deno` rather than `function` for deno-runtime runner ([#1611](https://github.com/keptn/lifecycle-toolkit/issues/1611)) ([72f5b82](https://github.com/keptn/lifecycle-toolkit/commit/72f5b82c6e4cf20114b5d716bda7fab99fe72ae9))
+* minor improvement for docs contribution guide ([#1613](https://github.com/keptn/lifecycle-toolkit/issues/1613)) ([6eac2bf](https://github.com/keptn/lifecycle-toolkit/commit/6eac2bf404ab1357903f8df990540379773eb11c))
+* re-generate CRD docs ([#1612](https://github.com/keptn/lifecycle-toolkit/issues/1612)) ([36845da](https://github.com/keptn/lifecycle-toolkit/commit/36845da8397d9067192498bb563f45d42ef60079))
+* set up Migration Guide ([#1506](https://github.com/keptn/lifecycle-toolkit/issues/1506)) ([c2e9f4a](https://github.com/keptn/lifecycle-toolkit/commit/c2e9f4a29890ab384769ca4c679b60efdbda3f57))
+
+
+### Dependency Updates
+
+* update anchore/sbom-action action to v0.14.3 ([#1626](https://github.com/keptn/lifecycle-toolkit/issues/1626)) ([2a1026c](https://github.com/keptn/lifecycle-toolkit/commit/2a1026cdc312b36198841bdd40264f4352064e51))
+* update busybox docker tag to v1.36.1 ([#1595](https://github.com/keptn/lifecycle-toolkit/issues/1595)) ([6770912](https://github.com/keptn/lifecycle-toolkit/commit/6770912c5c7fb3562db51835edb468cc6866e85c))
+* update dependency argoproj/argo-cd to v2.7.6 ([#1596](https://github.com/keptn/lifecycle-toolkit/issues/1596)) ([1c77c81](https://github.com/keptn/lifecycle-toolkit/commit/1c77c815abd06f29f91aafee440890bd36efea28))
+* update dependency golangci/golangci-lint to v1.53.3 ([#1606](https://github.com/keptn/lifecycle-toolkit/issues/1606)) ([227800a](https://github.com/keptn/lifecycle-toolkit/commit/227800a882028ee857480c70a567aeffccc5a60e))
+* update dependency helm/helm to v3.12.1 ([#1607](https://github.com/keptn/lifecycle-toolkit/issues/1607)) ([ac93ba4](https://github.com/keptn/lifecycle-toolkit/commit/ac93ba4976998b4ebccc964dc553ebb34304ec89))
+* update github.com/keptn/lifecycle-toolkit/klt-cert-manager digest to 1c77c81 ([#1593](https://github.com/keptn/lifecycle-toolkit/issues/1593)) ([472eac0](https://github.com/keptn/lifecycle-toolkit/commit/472eac0c8e2bd26eecf20e047123689761c914e7))
+* update github.com/keptn/lifecycle-toolkit/metrics-operator digest to 472eac0 ([#1594](https://github.com/keptn/lifecycle-toolkit/issues/1594)) ([7087bb6](https://github.com/keptn/lifecycle-toolkit/commit/7087bb6972fcddfc1ebc5a1d3bc5b2c01246ddfd))
+* update module github.com/onsi/gomega to v1.27.8 ([#1552](https://github.com/keptn/lifecycle-toolkit/issues/1552)) ([fe9e7ec](https://github.com/keptn/lifecycle-toolkit/commit/fe9e7ecc0bababfbf0d4fe5a35c6c735d4c28c76))
+* update sigstore/cosign-installer action to v3.1.0 ([#1627](https://github.com/keptn/lifecycle-toolkit/issues/1627)) ([a23ba71](https://github.com/keptn/lifecycle-toolkit/commit/a23ba710d00139e2d82d1676c23ef4a993d76e0e))
+
+
+### Other
+
+* bump release-please base commit ([#1621](https://github.com/keptn/lifecycle-toolkit/issues/1621)) ([c11bba3](https://github.com/keptn/lifecycle-toolkit/commit/c11bba3cd9625a819871bc66ee678ab56d93c773))
+* replace stale bot with GH actions workflow ([#1629](https://github.com/keptn/lifecycle-toolkit/issues/1629)) ([351c092](https://github.com/keptn/lifecycle-toolkit/commit/351c09296ac4f9beeab6ef2cad457e9689ddc0a5))
+
 ## [0.8.0](https://github.com/keptn/lifecycle-toolkit/compare/v0.7.1...v0.8.0) (2023-06-21)
 
 
